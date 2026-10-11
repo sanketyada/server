@@ -23,8 +23,13 @@ async function createTokens(user) {
   return { accessToken, refreshToken };
 }
 
+function verifyToken(token, secret) {
+  return jwt.verify(token, secret);
+}
+
 export {
   generateAccessToken,
   generateRefreshToken,
-  createTokens
+  createTokens,
+  verifyToken
 };

@@ -1,9 +1,8 @@
 import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
 import userModel from "../model/user.model.js";
 import refreshTokenModel from "../model/token.model.js";
 import config from "../config/config.js";
-import { createTokens } from "../utils/auth.utils.js";
+import { createTokens, verifyToken } from "../utils/auth.utils.js";
 
 async function hashPassword(password) {
   return bcrypt.hash(password, 10);
@@ -158,21 +157,21 @@ async function refreshToken(req, res) {
   }
 
   try {
+    const decoded = verifyToken(
+      currentRefreshToken,
+      config.REFRESH_TOKEN_SECRET
+    );
     const storedToken = await refreshTokenModel.findOne({
-      token: currentRefreshToken
+      userId: decoded.userID
     });
 
-    if (!storedToken) {
+    if (!storedToken || storedToken.token !== currentRefreshToken) {
       return res.status(401).json({
         success: false,
         message: "Invalid refresh token"
       });
     }
 
-    const decoded = jwt.verify(
-      currentRefreshToken,
-      config.REFRESH_TOKEN_SECRET
-    );
     const user = await userModel.findById(decoded.userID);
 
     if (!user) {
@@ -218,5 +217,16 @@ async function refreshToken(req, res) {
     });
   }
 }
+async function profile(req, res) {
+  return res.status(200).json({
+    success: true,
+    user: {
+      id: req.user._id,
+      username: req.user.username,
+      email: req.user.email,
+      role: req.user.role
+    }
+  });
+}
 
-export { register, login, logout, refreshToken };
+export { register, login, logout, refreshToken,profile};

@@ -7,7 +7,7 @@ app.use(cookieParser())
 import authRoutes from "../routes/auth.routes.js"
 
 app.get("/",(req,res)=>{
-    res.send("Serevr is Working")
+    res.send("Snitch Backned is Working.")
 })
 
 app.use("/api/auth",authRoutes)
