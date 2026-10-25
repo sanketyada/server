@@ -52,7 +52,11 @@ const productSchama = new mongoose.Schema({
     type:mongoose.Schema.Types.ObjectId,
     ref:"User",
     required:true
-  }
+  },
+  isListed: {
+    type: Boolean,
+    default: true,
+  },
 });
 
 

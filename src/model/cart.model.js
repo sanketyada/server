@@ -1,19 +1,17 @@
 import mongoose from "mongoose";
-import productModel from "./product.model";
-
 const cartSchema = new mongoose.Schema({
   products: [
     {
       product: {
         type: mongoose.Schema.Types.ObjectId,
-        ref:"products",
+        ref: "Product",
         required: true,
       },
       quantity: {
         type: Number,
         default: 1,
         min: 1,
-      },
+      },     
       size:{
         type:String,
         enum:["XS","S","M","L","XL","XXL"]
@@ -22,7 +20,7 @@ const cartSchema = new mongoose.Schema({
   ],
   user:{
     type:mongoose.Schema.Types.ObjectId,
-    ref:"users",
+    ref: "User",
     required:true
   }
 });
